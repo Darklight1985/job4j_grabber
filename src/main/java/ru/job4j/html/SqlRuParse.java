@@ -12,8 +12,7 @@ import java.net.URL;
 public class SqlRuParse {
     public static void main(String[] args) throws Exception {
         for (int i = 1; i < 5; i++) {
-            Connection connection = Jsoup.connect("https://www.sql.ru/forum/job-offers/" + i);
-            Document doc = connection.execute().parse();
+            Document doc = Jsoup.connect("https://www.sql.ru/forum/job-offers/" + i).get();
             Elements row = doc.select(".postslisttopic");
             for (Element td : row) {
                 Element href = td.child(0);
