@@ -16,10 +16,8 @@ public class SqlRuParse {
         }
         row = doc.select(".altCol");
         for (Element td : row) {
-            if (td.children().size() == 0) {
-                System.out.println(td.text());
+            System.out.println(td.parent().child(5).text());
             }
         }
 
-    }
 }
