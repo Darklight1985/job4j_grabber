@@ -13,11 +13,8 @@ public class SqlRuParse {
             Element href = td.child(0);
             System.out.println(href.attr("href"));
             System.out.println(href.text());
-        }
-        row = doc.select(".altCol");
-        for (Element td : row) {
             System.out.println(td.parent().child(5).text());
-            }
+        }
         }
 
 }
