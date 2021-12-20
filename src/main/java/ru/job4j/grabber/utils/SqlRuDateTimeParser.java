@@ -3,7 +3,6 @@ package ru.job4j.grabber.utils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
@@ -28,7 +27,6 @@ public class SqlRuDateTimeParser implements DateTimeParser {
     public LocalDateTime parse(String parse) {
         LocalDate date;
         LocalTime time;
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yy/M/dd");
         String[] data = parse.split(",");
         if ("сегодня".contains(data[0])) {
             date = LocalDate.now();
@@ -41,7 +39,7 @@ public class SqlRuDateTimeParser implements DateTimeParser {
                 }
                 String[] localDate = data[0].split(" ");
                 date = LocalDate.of(
-                        Integer.parseInt(localDate[2]),
+                        2000 + Integer.parseInt(localDate[2]),
                         Integer.parseInt(localDate[1]),
                         Integer.parseInt(localDate[0]));
             }
