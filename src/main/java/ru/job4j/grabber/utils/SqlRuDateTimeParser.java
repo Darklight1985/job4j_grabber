@@ -6,6 +6,9 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
+/**
+ * Класс позволяет преобразовать дату и время указанную на сайте к стандартному виду
+ */
 public class SqlRuDateTimeParser implements DateTimeParser {
 
     private static final Map<String, Integer> MONTHS = Map.ofEntries(

@@ -20,7 +20,7 @@ public class Post {
      */
     private String link;
     /**
-     * Опсание вакансии
+     * Описание вакансии
      */
     private String description;
     /**
