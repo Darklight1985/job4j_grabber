@@ -7,8 +7,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import ru.job4j.grabber.Parse;
 import ru.job4j.grabber.utils.Post;
+import ru.job4j.grabber.utils.SqlRuDateTimeParser;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,26 +26,13 @@ public class SqlRuParse implements Parse {
             for (Element td : row) {
                 Element href = td.child(0);
                 System.out.println(href.attr("href"));
-                postParse(href.attr("href"));
                 System.out.println(href.text());
                 System.out.println(td.parent().child(5).text());
+                SqlRuParse sqlRuParse = new SqlRuParse();
+               Post post = sqlRuParse.detail(href.attr("href"));
+                System.out.println(post);
             }
         }
-    }
-
-    /**
-     * Метод парисрует по ссылке описание вакансии и дату ее опубликования
-     *
-     * @param postStr
-     * @throws IOException
-     */
-    public static void postParse(String postStr) throws IOException {
-        Document document = Jsoup.connect(postStr).get();
-        Elements row = document.select(".msgBody");
-        Element td = row.get(1);
-        System.out.println(td.text());
-        Element data = td.parents().select(".msgFooter").first();
-        System.out.println(data.text().substring(0, data.text().indexOf("[")));
     }
 
     @Override
@@ -65,7 +54,7 @@ public class SqlRuParse implements Parse {
         /**
          * Ссылка на вакансию
          */
-          String ssilka = null;
+        String ssilka = null;
         /**
          * Дата обновления поста
          */
@@ -81,23 +70,16 @@ public class SqlRuParse implements Parse {
         /**
          * Дата создания поста
          */
-          String crDate;
+          LocalDateTime crDate;
 
-        Document doc = Jsoup.connect(link).get();
-        Elements row = doc.select(".postslisttopic");
-        for (Element td : row) {
-            Element href = td.child(0);
-            ssilka = href.attr("href");
-            publication = href.text();
-            postParse(href.attr("href"));
-            updDate = td.parent().child(5).text();
-        }
-        Document document = Jsoup.connect(ssilka).get();
+        Document document = Jsoup.connect(link).get();
+        publication = document.select(".messageHeader").get(0).ownText();
         Elements rowPost = document.select(".msgBody");
         Element td = rowPost.get(1);
         decription = rowPost.get(1).text();
         Element data = td.parents().select(".msgFooter").first();
-        crDate = data.text().substring(0, data.text().indexOf("["));
-        return new Post();
+        SqlRuDateTimeParser timeParser = new SqlRuDateTimeParser();
+        crDate = timeParser.parse(data.text().substring(0, data.text().indexOf("[")));
+        return new Post(publication, link, decription, crDate);
     }
 }
