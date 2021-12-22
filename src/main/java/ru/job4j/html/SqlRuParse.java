@@ -82,4 +82,5 @@ public class SqlRuParse implements Parse {
         crDate = timeParser.parse(data.text().substring(0, data.text().indexOf("[")));
         return new Post(publication, link, decription, crDate);
     }
+
 }
