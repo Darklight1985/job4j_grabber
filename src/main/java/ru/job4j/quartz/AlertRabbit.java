@@ -5,11 +5,7 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import static org.quartz.JobBuilder.*;
@@ -24,15 +20,16 @@ public class AlertRabbit {
         String url;
         String login;
         String password;
+        Integer interval;
         try {
             properties.load(new FileReader(file));
             driver = properties.getProperty("jdbc.driver");
             url = properties.getProperty("jdbc.url");
             login = properties.getProperty("jdbc.username");
             password = properties.getProperty("jdbc.password");
+            interval = Integer.valueOf(properties.getProperty("jdbc.interval"));
             Class.forName(driver);
            try (Connection connection = DriverManager.getConnection(url, login, password)) {
-               properties.load(new FileReader(file));
                Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
                scheduler.start();
                JobDataMap data = new JobDataMap();
@@ -41,7 +38,7 @@ public class AlertRabbit {
                        .usingJobData(data)
                        .build();
                SimpleScheduleBuilder times = simpleSchedule()
-                       .withIntervalInSeconds(5)
+                       .withIntervalInSeconds(interval)
                        .repeatForever();
                Trigger trigger = newTrigger()
                        .startNow()
@@ -67,10 +64,12 @@ public class AlertRabbit {
             System.out.println("Rabbit runs here ...");
             Connection connection =
                     (Connection) context.getJobDetail().getJobDataMap().get("connect");
-           try (Statement statement = connection.createStatement()) {
-               String sql = "Insert into rabbit(created_date) values ("
-                       + System.currentTimeMillis() + ");";
-               statement.execute(sql);
+           try {
+               var statement =
+                        connection.prepareStatement(
+                                "Insert into rabbit(created_date) values (?);");
+               statement.setLong(1, System.currentTimeMillis());
+               statement.execute();
            } catch (SQLException throwables) {
                throwables.printStackTrace();
            }
