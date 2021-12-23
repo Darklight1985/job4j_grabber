@@ -26,30 +26,17 @@ public class SqlRuParse implements Parse {
         this.dateTimeParser = dateTimeParser;
     }
 
-    public static void main(String[] args) throws Exception {
-        for (int i = 1; i <= 5; i++) {
-            Document doc = Jsoup.connect("https://www.sql.ru/forum/job-offers/" + i).get();
-            Elements row = doc.select(".postslisttopic");
-            for (Element td : row) {
-                Element href = td.child(0);
-                System.out.println(href.attr("href"));
-                System.out.println(href.text());
-                System.out.println(td.parent().child(5).text());
-            }
-        }
-    }
-
     @Override
     public List<Post> list(String link) {
-        SqlRuParse sqlRuParse = new SqlRuParse(new SqlRuDateTimeParser());
         List<Post> list = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
             try {
                 Document doc = Jsoup.connect(link + "/" + i).get();
                 Elements row = doc.select(".postslisttopic");
                 for (Element td : row) {
-                    Post post = sqlRuParse.detail(td.child(0).attr("href"));
-                    if (!post.getTitle().equalsIgnoreCase("javascript")) {
+                    Post post = detail(td.child(0).attr("href"));
+                    if (!post.getTitle().equalsIgnoreCase("javascript")
+                            && post.getTitle().equalsIgnoreCase("java")) {
                         list.add(post);
                     }
                 }
