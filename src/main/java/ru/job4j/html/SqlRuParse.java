@@ -47,16 +47,14 @@ public class SqlRuParse implements Parse {
         return list;
     }
 
+    /**
+     * Метож создает объект Post для СУБД на основе данных из постов на вакансию
+     * @param link - ссылка на вакансию
+     * @return
+     * @throws IOException
+     */
     @Override
     public Post detail(String link) throws IOException {
-        /**
-         * Ссылка на вакансию
-         */
-        String ssilka = null;
-        /**
-         * Дата обновления поста
-         */
-        String updDate;
         /**
          * Название поста
          */
