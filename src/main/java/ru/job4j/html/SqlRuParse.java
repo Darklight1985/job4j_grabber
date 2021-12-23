@@ -35,8 +35,7 @@ public class SqlRuParse implements Parse {
                 Elements row = doc.select(".postslisttopic");
                 for (Element td : row) {
                     Post post = detail(td.child(0).attr("href"));
-                    if (!post.getTitle().equalsIgnoreCase("javascript")
-                            && post.getTitle().equalsIgnoreCase("java")) {
+                    if (valid(post)) {
                         list.add(post);
                     }
                 }
@@ -79,4 +78,8 @@ public class SqlRuParse implements Parse {
         return new Post(publication, link, decription, crDate);
     }
 
+    public boolean valid(Post post) {
+        return (!post.getTitle().toLowerCase().contains("javascript")
+                && post.getTitle().toLowerCase().contains(("java")));
+    }
 }
