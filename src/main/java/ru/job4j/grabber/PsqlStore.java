@@ -123,7 +123,7 @@ public class PsqlStore implements Store, AutoCloseable {
           store.save(post2);
           store.save(post3);
 
-          Post newPost = store.findById(17);
+          Post newPost = store.findById(140);
         System.out.println(newPost.getLink());
         List<Post> list = store.getAll();
         list.forEach(s -> System.out.println(s));
