@@ -78,6 +78,11 @@ public class SqlRuParse implements Parse {
         return new Post(publication, link, decription, crDate);
     }
 
+    /**
+     * Метод проверяет что Пост содержит только ваканасии относящиеся к Java
+     * @param post
+     * @return
+     */
     public boolean valid(Post post) {
         return (!post.getTitle().toLowerCase().contains("javascript")
                 && post.getTitle().toLowerCase().contains(("java")));
