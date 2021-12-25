@@ -2,6 +2,7 @@ package ru.job4j.grabber;
 
 import ru.job4j.grabber.utils.Post;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -17,18 +18,18 @@ public class PsqlStore implements Store, AutoCloseable {
         String url;
         String login;
         String password;
-        try {
-            InputStream in = PsqlStore.class.getClassLoader()
-                    .getResourceAsStream("postbase.properties");
-                cfg.load(in);
                 url = cfg.getProperty("jdbc.url");
                 login = cfg.getProperty("jdbc.username");
                 password = cfg.getProperty("jdbc.password");
+        try {
             Class.forName(cfg.getProperty("jdbc.driver"));
             cnn = DriverManager.getConnection(url, login, password);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
+
     }
 
     @Override
@@ -100,6 +101,13 @@ public class PsqlStore implements Store, AutoCloseable {
 
     public static void main(String[] args) {
    Properties properties = new Properties();
+        InputStream in = PsqlStore.class.getClassLoader()
+                .getResourceAsStream("postbase.properties");
+        try {
+            properties.load(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         PsqlStore store = new PsqlStore(properties);
           Post post1 = new Post("Java", "https://www.sql.ru/forum/job-offers/61",
                   "Something..", LocalDateTime.now());
