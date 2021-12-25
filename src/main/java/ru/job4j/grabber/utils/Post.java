@@ -45,6 +45,10 @@ public class Post {
         this.created = created;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
     }
