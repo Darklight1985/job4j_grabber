@@ -9,7 +9,6 @@ group by c.name
 having count(p.id) =
 (select count(p.id) 
 from person p
-join company c on c.id = p.company_id
-group by c.name
+group by p.company_id
 order by count(p.id) desc
 limit 1)
