@@ -9,7 +9,7 @@ join company c on p.company_id = c.id
 group by c.name
 having count(p.id) =
 (select max(my_count) from
-(count(p.id) as my_count 
+(select count(p.id) as my_count 
 from person as p
 join company c on p.company_id = c.id
 group by c.name) as subdata)
