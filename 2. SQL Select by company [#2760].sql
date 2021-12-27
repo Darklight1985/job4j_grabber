@@ -6,6 +6,10 @@ where c.id <> 5;
 
 select c.name, count(p.id) from person as p
 join company c on p.company_id = c.id
-group by c.name 
-order by count(p.id) desc
-limit 1
+group by c.name
+having count(p.id) =
+(select max(my_count) from
+(select c.name as name, count(p.id) as my_count 
+from person as p
+join company c on p.company_id = c.id
+group by c.name) as subdata)
